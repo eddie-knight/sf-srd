@@ -30,15 +30,7 @@ export default class DataSourceContent extends Component {
     render() {
         if (this.state === {} || !this.state.output) { return <div />}
         return (
-                <DataSourceTabs data={this.state.output} />
+            <DataSourceTabs data={this.state.output} />
         )
-                // <div id="myTabContent" class="tab-content">
-                //     //
-                //         <div class="tab-pane fade show active" id="home">
-                //             //
-                //         </div>
-                //     //
-                // </div>                
-        // this.state.output.map((d) => <DataSourceTable data={d} />)
     }
 }

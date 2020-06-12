@@ -1,9 +1,18 @@
 export function properList(data) {
     let columns = {}
     Object.keys(data).forEach(column => (
-        columns[column] = (column.split("_").map(s => (
-        s[0].toUpperCase() + s.slice(1) )).join(" ")
+        columns[column] = (column.split("_").map(split => (
+        proper(split) )).join(" ")
     )))
-    console.log(columns)
     return columns
+}
+
+export function proper(data) {
+    return data[0].toUpperCase() + data.slice(1)
+}
+
+export function typecastNumber(value) {
+    if (isNaN(value))
+      return value
+    return Number(value)
 }

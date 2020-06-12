@@ -1,89 +1,104 @@
 import React, {Component} from 'react';
+import Loader from 'react-loader-spinner';
 import { MDBDataTable } from 'mdbreact';
 
-import { properList } from './helpers';
+import DataSourceTypes from './DataSourceTypes.js'
+import { typecastNumber, proper, properList } from './helpers';
 
-// class TableHead extends Component {
-//   render() {
-//     return (
-//       <thead><tr>
-//       {Object.keys(this.props.data[0]).map(column => (
-//           <th key={column}>{column}</th>
-//       ))}
-//       </tr></thead>
-//     )
-//   }
-// }
 
-// class TableBody extends Component {
-//   rows() {
-//     let rows = this.props.data
-//     return rows.map(function(row_data) {
+export default class DataSourceTable extends Component {
 
-//       function row(data) {
-//         return Object.keys(data).map(function(item) {
-//           return (<td>{data[item]}</td>)
-//         })
-//       }
-//       return  (
-//         <tr key={row_data['name']}>
-//           {row(row_data)}
-//         </tr>
-//       )
+  prepare_data() {
+    this.data_length = this.props.data.length
+    this.set_rows()
+    this.set_titles()
+    this.set_columns()
+    this.setState({
+      'data': this.props.data,
+      'columns': this.columns,
+      'notLoaded': false
+    })
+  }
 
-//     })
-//   }
+  set_rows() {
+    this.props.data.forEach((row, i) => {
+      Object.keys(row).forEach(col_name => {
+        if (row[col_name] == null || row[col_name] === 'null' ) {
+          this.props.data[i][col_name] = ''
+        } else if (row[col_name] !== '' && !isNaN(typecastNumber(row[col_name]))) {
+          this.props.data[i][col_name] = typecastNumber(row[col_name])
+        }
+        else if (typeof row[col_name] == 'object') {
+          this.parse_nested_data(row[col_name], col_name, i)
+        }
+      })
+    })
+  }
 
-//   render() {
-//     return (
-//       <tbody>{this.rows()}</tbody>
-//     )
-//   }
-// }
+  set_titles() {
+    this.typeData = DataSourceTypes[this.props.title]
+    this.titles = properList(this.props.data[0])
+    if ('description' in this.titles) { delete this.titles['description'] }
+    console.log(this.props.title, "titles set:", this.titles)
+  }
 
-class DataTable extends Component {
+  set_columns() {
+    this.columns = []
+    Object.keys(this.titles).forEach((column, i) => {
+        let column_label = ''
+        column_label = this.titles[column]
+        this.columns.push({
+          label: column_label,
+          field: column,
+          attributes: {
+            'aria-controls': 'DataTable',
+            'aria-label': 'Name',
+          },
+        })
+    })
+    console.log(this.props.title, "columns set:", this.columns)
+  }
+
+  parse_nested_data(data, col_name, i) {
+    // TODO: Find a lighter-weight solution for this process.
+    Object.keys(data).forEach(data_name => {
+      // In case more than just the name value is utilized, 
+      // rename name cell to 'cell_xyz Name' until other data is extracted
+      let cell_name = `${col_name} ${proper(data_name)}`
+
+      // Assign nested data to it's own 'cell_xyz' column
+      this.props.data[i][cell_name] = typecastNumber(data[data_name])
+    })
+    // Remove ' Name' from 'cell_xyz Name' column
+    this.props.data[i][col_name] = this.props.data[i][`${col_name} Name`]
+    delete this.props.data[i][`${col_name} Name`]
+  }
+
+  componentDidMount() {
+    this.prepare_data()
+  }
 
   render() {
-    let titles = properList(this.props.data[0])
-    if ('description' in titles) { delete titles['description'] }
-    let data_length = this.props.data.length
-    let _columns = []
-
-    Object.keys(titles).forEach(column => (
-      _columns.push({
-        label: titles[column],
-        field: column,
-        attributes: {
-          'aria-controls': 'DataTable',
-          'aria-label': 'Name',
-        },
-      })
-    ))
-
-    return (
+    if (!this.state) {
+      return (
+        <div className="d-flex justify-content-center">
+          <Loader type="ThreeDots" color="#1591BD" height="100" width="100" />
+        </div>
+      )
+    }
+    return  (
       <MDBDataTable
         hover
         striped
         bordered
         responsive
         paging={false}
-        entries={data_length}
-        entriesOptions={[10,25,50,data_length]}
+        entries={this.data_length}
+        entriesOptions={[10,25,50,this.data_length]}
         data={{
-          columns: _columns,
-          rows: this.props.data,
+          columns: this.state.columns,
+          rows: this.state.data,
         }} />
-  );
-
-  }
-}
-
-export default class DataSourceTable extends Component {
-  render() {
-    return  (
-      <table className="table table-hover">
-        <DataTable data={this.props.data} />
-      </table>
     )
   }
 }
