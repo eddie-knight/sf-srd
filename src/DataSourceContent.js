@@ -17,12 +17,14 @@ export default class DataSourceContent extends Component {
 
     async prepare_output() {
         let output = {};
-        Object.keys(DataSourceTypes).forEach(type => {
-            DataSourceRequest(type, DataSourceTypes[type])
+        Object.keys(DataSourceTypes).forEach(section => {
+            Object.keys(DataSourceTypes[section]).forEach(type => {
+                DataSourceRequest(type, DataSourceTypes[section][type])
                 .then(response => {
                     output[type] = response
                     this.setState({'output': output})
                 });
+            })
         })
     }
 

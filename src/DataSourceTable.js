@@ -92,6 +92,7 @@ export default class DataSourceTable extends Component {
         striped
         bordered
         responsive
+        order={['age', 'desc']}
         paging={false}
         entries={this.data_length}
         entriesOptions={[10,25,50,this.data_length]}

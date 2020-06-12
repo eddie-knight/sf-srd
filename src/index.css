@@ -20,7 +20,7 @@ th {
   position: -webkit-sticky; /* Safari */
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
   background-color: white;
 }
 
@@ -30,14 +30,7 @@ th {
   padding-bottom: 10px;
   padding-right: 5%;
 }
-/* 
-th {
-  position: sticky;
-  top: 0px;
-}
 
-[data-test="datatable-head"] {
-  position: sticky;
-  height: unset;
-  top: 60px;
-} */
+.dropdown-menu .show {
+  z-index: 1000;
+}

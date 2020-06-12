@@ -1,10 +1,14 @@
 export function properList(data) {
     let columns = {}
     Object.keys(data).forEach(column => (
-        columns[column] = (column.split("_").map(split => (
-        proper(split) )).join(" ")
-    )))
+        columns[column] = columnToProper(column)
+    ))
     return columns
+}
+
+export function columnToProper(data) {
+    return data.split("_").map(split => (
+        proper(split) )).join(" ").replace('And', '&')
 }
 
 export function proper(data) {

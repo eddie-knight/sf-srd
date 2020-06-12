@@ -2,22 +2,35 @@ import React, {Component} from 'react';
 
 // import HomePage from './HomeContent.js'
 import DataSourceTable from './DataSourceTable.js'
-import { properList } from './helpers';
+import { columnToProper } from './helpers';
+import DataSourceTypes from './DataSourceTypes.js';
 
-export default class DataSourceTabs extends Component {
+class DataSourceMenuTabs extends Component {
+    render() {
+        return Object.keys(DataSourceTypes).map(section => {
+            return (
+                <li className="nav-item dropdown show">
+                    <a className="nav-link dropdown-toggle" data-toggle="dropdown" href={'#menu-'+section} role="button" aria-haspopup="true" aria-expanded="false">{section}</a>
+                    <div className="dropdown-menu" style={{}}>
+                        {Object.keys(DataSourceTypes[section]).map(title => (
+                            <a className="nav-link" data-toggle="tab" href={'#' + title}>{columnToProper(title)}</a>
+                        ))}
+                    </div>
+                </li>
+            )
+        })
+    }
+}
+
+export default class DataSourceTabs extends Component {    
     render() {
         let data = this.props.data
-        let titles = properList(data)
         return (<>
             <ul className="nav nav-tabs" id="header">
             <li className="nav-item">
                 <a className="nav-link active" key="home" data-toggle="tab" href="#home">Home</a>
             </li>
-            {Object.keys(titles).map(title => (
-                    <li key={title} className="nav-item">
-                        <a className="nav-link" data-toggle="tab" href={'#' + title}>{titles[title]}</a>
-                    </li>
-            ))}
+            <DataSourceMenuTabs />
             </ul>
             <div id="body" className="tab-content">
                 <div className="tab-pane fade show active" id="home">
