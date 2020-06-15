@@ -3,7 +3,7 @@ import Loader from 'react-loader-spinner';
 import { MDBDataTable } from 'mdbreact';
 
 import DataSourceTypes from './DataSourceTypes.js'
-import { typecastNumber, proper, properList } from './helpers';
+import { typecastNumber, proper, columnToProper, properList } from './helpers';
 
 
 export default class DataSourceTable extends Component {
@@ -87,19 +87,22 @@ export default class DataSourceTable extends Component {
       )
     }
     return  (
-      <MDBDataTable
-        hover
-        striped
-        bordered
-        responsive
-        order={['age', 'desc']}
-        paging={false}
-        entries={this.data_length}
-        entriesOptions={[10,25,50,this.data_length]}
-        data={{
-          columns: this.state.columns,
-          rows: this.state.data,
-        }} />
+      <>
+        <div className="d-flex justify-content-center"><h2>{columnToProper(this.props.title)}</h2></div>
+        <MDBDataTable
+          hover
+          striped
+          bordered
+          responsive
+          order={['age', 'desc']}
+          paging={false}
+          entries={this.data_length}
+          entriesOptions={[10,25,50,this.data_length]}
+          data={{
+            columns: this.state.columns,
+            rows: this.state.data,
+          }} />
+      </>
     )
   }
 }

@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
+import Cookies from 'universal-cookie';
 
 // import HomePage from './HomeContent.js'
 import DataSourceTable from './DataSourceTable.js'
-import { columnToProper } from './helpers';
-import DataSourceTypes from './DataSourceTypes.js';
+import { columnToProper } from './helpers'
+import DataSourceTypes from './DataSourceTypes.js'
+
+const cookies = new Cookies();
+
 
 class DataSourceMenuTabs extends Component {
     render() {
@@ -22,7 +26,18 @@ class DataSourceMenuTabs extends Component {
     }
 }
 
-export default class DataSourceTabs extends Component {    
+export default class DataSourceTabs extends Component {
+
+    darkModeButton() {
+        let text = (cookies.get('dark-mode') === 'false') ? 'Light Mode Active' : 'Dark Mode Active'
+        return <button className="nav-link active" onClick={this.refreshPage}>{text}</button>
+    }
+
+    refreshPage() {
+        cookies.set('dark-mode', (cookies.get('dark-mode') === 'false'))
+        window.location.reload(false);
+    }
+
     render() {
         let data = this.props.data
         return (<>
@@ -31,6 +46,9 @@ export default class DataSourceTabs extends Component {
                 <a className="nav-link active" key="home" data-toggle="tab" href="#home">Home</a>
             </li>
             <DataSourceMenuTabs />
+            <li className="nav-item">
+                {this.darkModeButton()}
+            </li>
             </ul>
             <div id="body" className="tab-content">
                 <div className="tab-pane fade show active" id="home">
