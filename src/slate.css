@@ -1,3 +1,14 @@
+/*
+ * Custom Additions 
+*/
+
+th {
+    background-color: #272B30 !important;
+}
+
+h2 {
+    color: #FAFAFA
+}
 /*!
  * Bootswatch v4.5.0
  * Homepage: https://bootswatch.com

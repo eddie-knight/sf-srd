@@ -10,12 +10,8 @@ import DataSourceContent from './DataSourceContent.js'
 
 
 const cookies = new Cookies();
-
-if (cookies.get('dark-mode') === 'true') {
-  require('./slate.css');
-} else {
-  require('./yeti.css');
-}
+const style = cookies.get('layout') || 'Yeti'
+require(`./${style}.css`);
 
 
 function App() {  
