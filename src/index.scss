@@ -22,6 +22,11 @@ body {
   padding-right: 15px;
 }
 
+.modal-body {
+  max-height: 75vh;
+  overflow-y: auto !important;
+}
+
 .dropdown-menu .show {
   z-index: 1000;
 }

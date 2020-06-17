@@ -11,7 +11,7 @@ import DataSourceContent from './DataSourceContent.js'
 
 const cookies = new Cookies();
 const style = cookies.get('layout') || 'Yeti'
-require(`./${style}.css`);
+require(`./assets/${style}.css`);
 
 
 function App() {  

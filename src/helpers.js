@@ -1,8 +1,8 @@
-export function properList(data) {
+export function properList(data, exclude = []) {
     let columns = {}
-    Object.keys(data).forEach(column => (
-        columns[column] = columnToProper(column)
-    ))
+    Object.keys(data).forEach((column) => {
+        columns[column] = exclude.includes(column) ? column : columnToProper(column)
+    })
     return columns
 }
 
