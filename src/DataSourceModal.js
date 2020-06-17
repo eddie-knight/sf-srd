@@ -3,9 +3,8 @@ import {Modal} from 'react-bootstrap'
 
 import DataSourceTypes from './DataSourceTypes'
 import DataSourceRequest from './DataSourceRequest'
-import {columnToProper} from './helpers'
+import {columnToProper, getLocal, setLocal} from './helpers'
 
-const DATA = {}
 
 export default class DataSourceModal extends Component {
 
@@ -17,30 +16,30 @@ export default class DataSourceModal extends Component {
   }
 
   getData(name, type, fields) {
-    if (!DATA[type]) {
-      DATA[type] = {}
-    }
-    if (!DATA[type][name]) {
+    let localData = getLocal(type)
+    if (!localData[name]) {
+      console.log(`Fetching ${type} ${name}`)
       DataSourceRequest(
         type,
         fields,
         `(name_is: "${name}")`
       ).then(response => {
-        DATA[type][name] = Object.keys(response[0]).map( entry => {
+        localData[name] = Object.keys(response[0]).map( entry => {
           let data = response[0][entry]
           return this.parseDataEntry(entry, data)
         })
-        this.setState({data: DATA[type][name]})
+        setLocal(type, localData)
+        this.setState({data: localData[name]})
       })
     } else {
-      this.setState({data: DATA[type][name]})
+      this.setState({data: localData[name]})
     }
   }
 
   parseDataEntry(entry, data) {
     if (Array.isArray(data)) {
       return this.parseModalArray(entry, data)
-    } else if (typeof data === 'object') {
+    } else if (data && typeof data === 'object') {
       return this.parseModalObject(entry, data)
     } else if (entry !== 'name') {
       return this.modalLine('', entry, data)
@@ -49,21 +48,22 @@ export default class DataSourceModal extends Component {
   }
 
   parseModalArray(title, data) {
-    console.log("!", title, data)
     return `
       <strong>${columnToProper(title)}</strong>:
       <ul><li>${data.map(entry => {return this.parseModalObject(title, entry, true)}).join('</li><li>')}</li></ul>
-      <br />`
+      `
   }
 
   parseModalObject(table, data, nested=false) {
     return Object.keys(data).map(title => {
       return this.modalLine(table, title, data[title], nested)
-    }).join('<br />')
+    }).join('')
   }
 
   modalLine(table, title, data, nested) {
-    console.log(table, title, data)
+    if (!data || data === 'null') {
+      return ''
+    }
     if (nested) {
       return data
     }
@@ -97,9 +97,16 @@ export default class DataSourceModal extends Component {
             <Modal.Title>{this.state.title}</Modal.Title>
           </Modal.Header>
             <Modal.Body>
-              {Object.keys(this.state.data).map(entry => {
-                return <div dangerouslySetInnerHTML={{__html: this.state.data[entry]}}></div>
-              })}
+                {Object.keys(this.state.data).map(entry => {
+                  let className = 'modalEntry'
+                  if (this.state.data[entry].includes('escription</strong>')) {
+                    className='modalEntryLong'
+                  }
+                  if (this.state.data[entry]) {
+                    return <div className={className} dangerouslySetInnerHTML={{__html: this.state.data[entry]}}></div>
+                  }
+                  return ''
+                })}
             </Modal.Body>
         </Modal.Dialog>
       </Modal>

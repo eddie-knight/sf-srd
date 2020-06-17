@@ -20,3 +20,11 @@ export function typecastNumber(value) {
       return value
     return Number(value)
 }
+
+export function getLocal(name) {
+    return JSON.parse(localStorage.getItem(name)) || {}
+}
+
+export function setLocal(name, data) {
+    localStorage.setItem(name, JSON.stringify(data))
+}
