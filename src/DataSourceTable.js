@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Loader from 'react-loader-spinner';
 import { MDBDataTable } from 'mdbreact';
 
-import { typecastNumber, proper, columnToProper, properList } from './helpers';
+import { typecastNumber, proper, properList } from './helpers';
 import DataSourceModal from './DataSourceModal'
 import DataSourceTypes from './DataSourceTypes';
 import {getLocal, setLocal} from './helpers';
@@ -12,14 +12,16 @@ export default class DataSourceTable extends Component {
   prepare_data() {
     this.data_length = this.props.data.length
     this.setAbbreviatedRelationalNames()
-    this.setRows()
-    this.setTitles()
-    this.setColumns()
     setLocal(`${this.props.title}-tableData`, {'columns': this.columns, 'rows': this.rows})
     this.setTableState()
   }
 
   setTableState() {
+    this.setRows()
+    if (!this.columns) {
+      this.setTitles()
+      this.setColumns()  
+    }
     this.setState({
       'rows': this.rows, 
       'columns': this.columns,
@@ -27,7 +29,9 @@ export default class DataSourceTable extends Component {
   }
 
   setRows() {
-    this.rows = JSON.parse(JSON.stringify((this.props.data)))
+    if (!this.rows) {
+      this.rows = JSON.parse(JSON.stringify((this.props.data)))
+    }
     this.rows.forEach((row, i) => {
       Object.keys(row).forEach(col_name => {
         if (row[col_name] == null || row[col_name] === 'null' ) {
@@ -110,6 +114,7 @@ export default class DataSourceTable extends Component {
         console.log("local data found", tableData)
         this.rows = tableData['rows']
         this.columns = tableData['columns']
+        this.setRows()
         this.setTableState()
       }
     }
@@ -125,7 +130,6 @@ export default class DataSourceTable extends Component {
     }
     return (
       <>
-        <div className="d-flex justify-content-center"><h2>{columnToProper(this.props.title)}</h2></div>
         <MDBDataTable
           hover
           striped

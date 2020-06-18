@@ -68,9 +68,9 @@ export default class DataSourceModal extends Component {
       return data
     }
     if (title === 'name') {
-      return `<strong>${columnToProper(table)}</strong>: ${data}`
+      return `<strong>${columnToProper(table)}</strong>:<br /> ${data}`
     }
-    return `<strong>${columnToProper(title)}</strong>: ${data}`
+    return `<strong>${columnToProper(title)}</strong>:<br /> ${data}`
   }
 
   show(name, type, section) {

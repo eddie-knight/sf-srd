@@ -14,7 +14,7 @@ class DataSourceMenuTabs extends Component {
                     <a className="nav-link dropdown-toggle" data-toggle="dropdown" href={'#menu-'+section} role="button" aria-haspopup="true" aria-expanded="false">{section}</a>
                     <div className="dropdown-menu" style={{}}>
                         {Object.keys(DataSourceTypes[section]).map(title => (
-                            <div><a className="btn btn-link text-left" data-toggle="tab" href={'#' + title}>{columnToProper(title)}</a></div>
+                            <div><a className="btn btn-link text-left" data-toggle="tab" href={this.props.disabled ? '#loading' : ('#' + title)}>{columnToProper(title)}</a></div>
                         ))}
                     </div>
                 </li>
@@ -30,7 +30,7 @@ export default class DataSourceTabs extends Component {
             <li className="nav-item">
                 <a className="nav-link active" key="home" data-toggle="tab" href="#home">Home</a>
             </li>
-            <DataSourceMenuTabs />
+            <DataSourceMenuTabs disabled={this.props.disabled} />
             <StyleSelectionTab />
             </ul>
         </>)

@@ -5,6 +5,8 @@ import DataSourceTypes from './DataSourceTypes.js'
 import DataSourceTabs from './DataSourceTabs.js'
 import DataSourceTable from './DataSourceTable.js'
 
+import {getLocal} from './helpers';
+
 export default class DataSourceContent extends Component {
 
     state = {
@@ -14,6 +16,10 @@ export default class DataSourceContent extends Component {
 
     componentDidMount() {
         this.prepare_output()
+        // let localData = getLocal('bulkData')
+        // if (Object.keys(localData) === 0) {
+        //     this.prepare_output()
+        // }
     }
 
     async prepare_output() {
@@ -36,22 +42,20 @@ export default class DataSourceContent extends Component {
 
 
     render() {
+        localStorage.clear()
         if (
-            !this.state 
-            || !this.state.data 
+            !this.state.data
             || !this.state.sections
+            || Object.keys(this.state.sections).length !== Object.keys(this.state.data).length
         ){
-            return <div />
-        } else if (
-            Object.keys(this.state.sections).length !== Object.keys(this.state.data).length
-        ) {
-            console.log("Loading", (Object.keys(this.state.sections).length - Object.keys(this.state.data).length), "more section(s).")
-            return <div />
+            if (this.state.sections) { console.log(Object.keys(this.state.sections).length) }
+            return <DataSourceTabs disabled={true}/>
         }
         let data = this.state.data
+        console.log("!")
         return (<>
-            <DataSourceTabs />
             <div id="body" className="tab-content">
+                <DataSourceTabs disabled={false} />
                 <div className="tab-pane fade show active" id="home">
                     <p>Home.</p>
                 </div>
