@@ -91,24 +91,25 @@ export default class DataSourceModal extends Component {
   render() {
     if (!this.state.data) { return null }
     return (
-      <Modal show={this.state.showModal} onHide={() => this.onHide()}>
-        <Modal.Dialog scrollable={true}>
-          <Modal.Header closeButton>
-            <Modal.Title>{this.state.title}</Modal.Title>
-          </Modal.Header>
-            <Modal.Body>
-                {Object.keys(this.state.data).map(entry => {
-                  let className = 'modalEntry'
-                  if (this.state.data[entry].includes('escription</strong>')) {
-                    className='modalEntryLong'
-                  }
-                  if (this.state.data[entry]) {
-                    return <div className={className} dangerouslySetInnerHTML={{__html: this.state.data[entry]}}></div>
-                  }
-                  return ''
-                })}
-            </Modal.Body>
-        </Modal.Dialog>
+      <Modal className="card border-secondary" show={this.state.showModal} onHide={() => this.onHide()}>
+        <Modal.Header closeButton>
+          <Modal.Title>{this.state.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body scrollable="true">
+              {Object.keys(this.state.data).map(entry => {
+                let className = 'modalEntry'
+                if (
+                  this.state.data[entry].includes('escription</strong>') 
+                  || this.state.data[entry].includes('<ul>')
+                ) {
+                  className='modalEntryLong'
+                }
+                if (this.state.data[entry]) {
+                  return <div className={className} dangerouslySetInnerHTML={{__html: this.state.data[entry]}}></div>
+                }
+                return ''
+              })}
+          </Modal.Body>
       </Modal>
     )
   }

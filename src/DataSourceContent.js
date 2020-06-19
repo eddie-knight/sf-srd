@@ -1,69 +1,149 @@
 import React, {Component} from 'react';
+import Loader from 'react-loader-spinner';
 
 import DataSourceRequest from './DataSourceRequest.js'
 import DataSourceTypes from './DataSourceTypes.js'
-import DataSourceTabs from './DataSourceTabs.js'
+import DataSourceNavbar from './DataSourceNavbar.js'
 import DataSourceTable from './DataSourceTable.js'
 
-import {getLocal} from './helpers';
+import {getLocal, setLocal} from './helpers';
 
 export default class DataSourceContent extends Component {
-
+    showTabMap = {}
+    loadingTables = false
+    loadingData = false
     state = {
-        data: null,
-        output: null
+        data: {},
+        active: '',
+        tabContent: {},
     }
 
     componentDidMount() {
-        this.prepare_output()
-        // let localData = getLocal('bulkData')
-        // if (Object.keys(localData) === 0) {
-        //     this.prepare_output()
-        // }
+        this.prepareData()
     }
 
-    async prepare_output() {
-        let output = {};
-        let typesSections = {}
+    async getSections() {
+        console.log("Setting Section Titles")
+        let sections = {}
         Object.keys(DataSourceTypes).forEach(section => {
             Object.keys(DataSourceTypes[section]).forEach(type => {
-                typesSections[type] = section
+                sections[type] = section
+            })
+        })
+        console.log(sections)
+        return sections
+    }
+
+    getData() {
+        let output = this.state.data || {}
+        Object.keys(this.sections).forEach(type => {
+            this.fetchingData = true
+            let section = this.sections[type]
+            console.log(section, type)
+            // let dataTitle = `data-${section}-${type}`
+            if (true) {
+                console.log("Fetching data from API:", section, type)
                 DataSourceRequest(type, DataSourceTypes[section][type]['table'])
                 .then(response => {
+                    console.log('Data retrieved from API:', type)
                     output[type] = response
-                    this.setState({
-                        'data': output,
-                        'sections': typesSections,
-                    })
+                    this.setState({'data': output})
                 });
-            })
+            }
         })
     }
 
+    loadData() {
+        this.showTab = this.showTabFunc.bind(this)
+        this.loadingData = true
+        let localSections = getLocal('ds-sections')
+        if (Object.keys(localSections).length === 0) {
+            this.getSections().then(response => {
+                this.sections = response
+                // setLocal('ds-sections', response)
+                console.log("!?")
+                this.getData()
+            })
+        }
+    }
+
+    prepareData() {
+        if (this.state.data && this.sections){
+            // Preparation is complete, return status as 'not loading'
+            return false
+        }
+        if (!this.sections && !this.loadingData) {
+            // Page has not yet begun loading data, begin now
+            this.loadData()
+        }
+        // After loading has begun, show spinner
+        return (
+            <div className="d-flex justify-content-center">
+                <Loader type="ThreeDots" color="#1591BD" height="100" width="100" />
+            </div>
+        )
+    }
+
+    showTabFunc(title) {
+        this.setState({"active": title})
+    }
+
+    async renderTables() {
+        let content = {}
+        await Object.keys(this.state.data).forEach(title => {
+            let classes = `tab-pane fade ${(this.state.active === title) ? 'active' : ''}`
+            content[title] = (
+                <div className={classes} role="tabpanel" key={title} id={title}>
+                    <DataSourceTable 
+                        section={this.sections[title]}
+                        title={title}
+                        data={this.state.data[title]}
+                    />
+                </div>
+            )
+        })
+        return content
+    }
+
+    renderTabContent() {
+        if (
+            this.sections
+            && !this.loadingTables
+            && Object.keys(this.state.data).length === Object.keys(this.sections).length
+            ) {
+                // Tabs have not yet been rendered, begin now
+                this.loadingTables = true
+                this.renderTables().then(content => {
+                    this.setState({'tabContent': content})
+            })
+        } else if (Object.keys(this.state.tabContent).length > 0) {
+            // Return tabs that have been rendered and saved to runtime memory
+            return Object.keys(this.state.tabContent).map(content => {
+                return this.state.tabContent[content]
+            })
+        }
+        // If tabs have not finished rendering, show loading icon
+        return (
+            <div className="d-flex justify-content-center">
+                <Loader type="ThreeDots" color="#1591BD" height="100" width="100" />
+            </div>
+        )
+    }
 
     render() {
-        localStorage.clear()
-        if (
-            !this.state.data
-            || !this.state.sections
-            || Object.keys(this.state.sections).length !== Object.keys(this.state.data).length
-        ){
-            if (this.state.sections) { console.log(Object.keys(this.state.sections).length) }
-            return <DataSourceTabs disabled={true}/>
+        let loading = this.prepareData()
+        if (loading !== false) {
+            // Render loading icon
+            return loading
         }
-        let data = this.state.data
-        console.log("!")
+        let output = this.renderTabContent()
         return (<>
+            <DataSourceNavbar loaded={Object.keys(this.state.data)} active={this.state.active} showTab={this.showTab}/>
             <div id="body" className="tab-content">
-                <DataSourceTabs disabled={false} />
-                <div className="tab-pane fade show active" id="home">
+                <div className="tab-pane fade show active" role="tabpanel" id="home">
                     <p>Home.</p>
                 </div>
-                {Object.keys(data).map(title => (
-                    <div className="tab-pane fade" key={title} id={title}>
-                        <DataSourceTable section={this.state.sections[title]} title={title} data={data[title]} />
-                    </div>
-                ))}
+                { output }
             </div>
         </>)
     }

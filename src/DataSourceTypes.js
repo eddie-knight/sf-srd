@@ -342,11 +342,11 @@ const DataSourceTypes = {
             'modal': [
                 'hit_points',
                 'stamina_points',
+                'key_ability_score',
                 'skills_per_level',
                 { 
                     'class_proficiencies': ['name'],
                 },
-                'key_ability_score',
                 'long_description'
             ],
             'modalTabs': [

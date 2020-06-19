@@ -110,7 +110,7 @@ export default class DataSourceTable extends Component {
       if (Object.keys(tableData).length === 0) {
         console.log("preparing data")
         this.prepare_data()
-      } else {
+      } else if (!this.rows) {
         console.log("local data found", tableData)
         this.rows = tableData['rows']
         this.columns = tableData['columns']
