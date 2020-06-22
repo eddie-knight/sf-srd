@@ -1,4 +1,4 @@
-const DataSourceTypes = {
+const DataDefinitions = {
     'Armory': {
         'armor': {
             'table': [
@@ -282,7 +282,7 @@ const DataSourceTypes = {
                 'mystic_level',
                 'technomancer_level',
                 'witchwarper_level',
-                {'effect_range': ['name']},
+                {'effect_range': ['name', 'description']},
                 'school',
                 'casting_time',
                 'effect',
@@ -377,4 +377,4 @@ const DataSourceTypes = {
         }
     }
 }
-export default DataSourceTypes
+export default DataDefinitions

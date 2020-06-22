@@ -6,7 +6,7 @@ import Cookies from 'universal-cookie';
 
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 
-import DataSourceContent from './DataSourceContent.js'
+import PageContent from './modules/PageContent.js'
 
 
 const cookies = new Cookies();
@@ -18,7 +18,7 @@ function App() {
   return (
     <>
     <div className="app">
-      <DataSourceContent />
+      <PageContent />
     </div>
     </>
   );

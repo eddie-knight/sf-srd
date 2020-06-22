@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import Loader from 'react-loader-spinner';
 
 import DataSourceRequest from './DataSourceRequest.js'
-import DataSourceTypes from './DataSourceTypes.js'
-import DataSourceNavbar from './DataSourceNavbar.js'
-import DataSourceTable from './DataSourceTable.js'
+import DataDefinitions from './DataDefinitions.js'
+import Navbar from './Navbar.js'
+import Table from './Table.js'
 
 import {getLocal, setLocal} from './helpers';
 
-export default class DataSourceContent extends Component {
+export default class PageContent extends Component {
     showTabMap = {}
     loadingTables = false
     loadingData = false
@@ -25,8 +25,8 @@ export default class DataSourceContent extends Component {
     async getSections() {
         console.log("Setting Section Titles")
         let sections = {}
-        Object.keys(DataSourceTypes).forEach(section => {
-            Object.keys(DataSourceTypes[section]).forEach(type => {
+        Object.keys(DataDefinitions).forEach(section => {
+            Object.keys(DataDefinitions[section]).forEach(type => {
                 sections[type] = section
             })
         })
@@ -43,7 +43,7 @@ export default class DataSourceContent extends Component {
             // let dataTitle = `data-${section}-${type}`
             if (true) {
                 console.log("Fetching data from API:", section, type)
-                DataSourceRequest(type, DataSourceTypes[section][type]['table'])
+                DataSourceRequest(type, DataDefinitions[section][type]['table'])
                 .then(response => {
                     console.log('Data retrieved from API:', type)
                     output[type] = response
@@ -95,7 +95,7 @@ export default class DataSourceContent extends Component {
             let classes = `tab-pane fade ${(this.state.active === title) ? 'active' : ''}`
             content[title] = (
                 <div className={classes} role="tabpanel" key={title} id={title}>
-                    <DataSourceTable 
+                    <Table 
                         section={this.sections[title]}
                         title={title}
                         data={this.state.data[title]}
@@ -139,7 +139,7 @@ export default class DataSourceContent extends Component {
         }
         let output = this.renderTabContent()
         return (<>
-            <DataSourceNavbar loaded={Object.keys(this.state.data)} active={this.state.active} showTab={this.showTab}/>
+            <Navbar loaded={Object.keys(this.state.data)} active={this.state.active} showTab={this.showTab}/>
             <div id="body" className="tab-content">
                 <div className="tab-pane fade show active" role="tabpanel" id="home">
                     <p>Home.</p>

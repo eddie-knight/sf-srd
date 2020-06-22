@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Modal} from 'react-bootstrap'
 
-import DataSourceTypes from './DataSourceTypes'
+import DataDefinitions from './DataDefinitions'
 import DataSourceRequest from './DataSourceRequest'
 import {columnToProper, getLocal, setLocal} from './helpers'
 
@@ -92,7 +92,7 @@ export default class DataSourceModal extends Component {
   }
 
   show(name, type, section) {
-    let fields = DataSourceTypes[section][type]['modal']
+    let fields = DataDefinitions[section][type]['modal']
     this.getData(name, type, fields)
     this.setState({
       showModal: true,

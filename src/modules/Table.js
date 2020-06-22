@@ -3,11 +3,11 @@ import Loader from 'react-loader-spinner';
 import { MDBDataTable } from 'mdbreact';
 
 import { typecastNumber, proper, properList } from './helpers';
-import DataSourceModal from './DataSourceModal'
-import DataSourceTypes from './DataSourceTypes';
+import DataSourceModal from './Modal'
+import DataDefinitions from './DataDefinitions';
 import {getLocal, setLocal} from './helpers';
 
-export default class DataSourceTable extends Component {
+export default class Table extends Component {
 
   prepare_data() {
     this.data_length = this.props.data.length
@@ -76,7 +76,7 @@ export default class DataSourceTable extends Component {
 
   setAbbreviatedRelationalNames() {
     this.abbreviatedRelationalNames = []
-    let tableStructure = DataSourceTypes[this.props.section][this.props.title]['table']
+    let tableStructure = DataDefinitions[this.props.section][this.props.title]['table']
     tableStructure.forEach(struct => {
       if (typeof struct === 'object') {
         Object.keys(struct).forEach(relationalTableName => {

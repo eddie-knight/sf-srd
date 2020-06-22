@@ -2,18 +2,18 @@ import React, {Component} from 'react';
 
 // import HomePage from './HomeContent.js'
 import { columnToProper } from './helpers'
-import DataSourceTypes from './DataSourceTypes.js'
+import DataDefinitions from './DataDefinitions.js'
 import StyleSelectionTab from './StyleSelectionTab.js'
 
 
 class DataSourceMenuTabs extends Component {
     render() {
-        return Object.keys(DataSourceTypes).map(section => {
+        return Object.keys(DataDefinitions).map(section => {
             return (
                 <li className="nav-item dropdown show">
                     <a className="nav-link dropdown-toggle" data-toggle="dropdown" href={'#Menu-'+section} role="button" aria-haspopup="true" aria-expanded="false">{section}</a>
                     <div className="dropdown-menu" style={{}}>
-                        {Object.keys(DataSourceTypes[section]).map(title => {
+                        {Object.keys(DataDefinitions[section]).map(title => {
                             let disabled = this.props.loaded.includes(title) ? '' : 'disabled'
                             let active = (title === this.props.active) ? 'active' : ''
                             return <div><a className={`dropdown-item ${disabled} ${active} {text-left`} onClick={() => this.props.showTab(title)} data-toggle="tab" href={('#' + title)} role="tab">{columnToProper(title)}</a></div>
@@ -25,7 +25,7 @@ class DataSourceMenuTabs extends Component {
     }
 }
 
-export default class DataSourceNavbar extends Component {
+export default class Navbar extends Component {
     render() {
         return (<>
             <ul className="nav nav-tabs" id="tabs">
