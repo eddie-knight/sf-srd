@@ -24,10 +24,22 @@ export default class DataSourceModal extends Component {
         fields,
         `(name_is: "${name}")`
       ).then(response => {
-        localData[name] = Object.keys(response[0]).map( entry => {
+        let parsedData = Object.keys(response[0]).map( entry => {
           let data = response[0][entry]
           return this.parseDataEntry(type, entry, data)
         })
+        let finalParsedData = []
+        parsedData.forEach((entry) => {
+          if (Array.isArray(entry)) {
+            entry.forEach(item => {
+              finalParsedData.push(item)
+            })
+          } else {
+            finalParsedData.push(entry)
+          }
+        })
+        console.log("!", finalParsedData)
+        localData[name] = finalParsedData
         setLocal(type, localData)
         this.setState({data: localData[name]})
       })
@@ -62,7 +74,7 @@ export default class DataSourceModal extends Component {
         return this.modalLine(table, title, data[title], nested)
       }
       return this.parseDataEntry(table, title, data[title])
-    }).join('')
+    })
     return output
   }
 
