@@ -26,7 +26,7 @@ export default class DataSourceModal extends Component {
       ).then(response => {
         localData[name] = Object.keys(response[0]).map( entry => {
           let data = response[0][entry]
-          return this.parseDataEntry(entry, data)
+          return this.parseDataEntry(type, entry, data)
         })
         setLocal(type, localData)
         this.setState({data: localData[name]})
@@ -36,13 +36,15 @@ export default class DataSourceModal extends Component {
     }
   }
 
-  parseDataEntry(entry, data) {
+  parseDataEntry(table, entry, data) {
     if (Array.isArray(data)) {
       return this.parseModalArray(entry, data)
     } else if (data && typeof data === 'object') {
       return this.parseModalObject(entry, data)
     } else if (entry !== 'name') {
       return this.modalLine('', entry, data)
+    } else if (entry === 'name') {
+      return this.modalLine(table, entry, data)
     }
     return ''
   }
@@ -55,9 +57,13 @@ export default class DataSourceModal extends Component {
   }
 
   parseModalObject(table, data, nested=false) {
-    return Object.keys(data).map(title => {
-      return this.modalLine(table, title, data[title], nested)
+    let output = Object.keys(data).map(title => {
+      if (nested) {
+        return this.modalLine(table, title, data[title], nested)
+      }
+      return this.parseDataEntry(table, title, data[title])
     }).join('')
+    return output
   }
 
   modalLine(table, title, data, nested) {

@@ -69,6 +69,7 @@ export default class DataSourceContent extends Component {
 
     prepareData() {
         if (this.state.data && this.sections){
+            localStorage.clear()
             // Preparation is complete, return status as 'not loading'
             return false
         }
