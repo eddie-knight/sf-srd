@@ -81,14 +81,12 @@ const DataSourceTypes = {
             'table': [
                 'name',
                 'damage',
-                {'weapon_category': ['name', '_hands'
-            ]},
+                {'weapon_category': ['_hands', 'name',]},
             ],
             'modal': [
-                'name',
                 'damage',
-                {'weapon_category': ['name', '_hands'
-            ]},
+                {'weapon_category': ['_hands', 'name',]},
+                'description',
             ]
         }, 
         'weapon_fusions': {
