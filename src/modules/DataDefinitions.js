@@ -29,7 +29,8 @@ const DataDefinitions = {
             ]
         },
         'powered_armor': {
-            'table': ['name',
+            'table': [
+                'name',
                 'level',
                 'price',
                 'eac_bonus',
@@ -41,8 +42,9 @@ const DataDefinitions = {
                 'swim_speed',
                 'climb_speed',
                 'fly_speed',
-                'burrow_speed'],
-            'modal': ['name',
+                'burrow_speed',
+            ],
+            'modal': [
                 'level',
                 'price',
                 'eac_bonus',
@@ -60,22 +62,26 @@ const DataDefinitions = {
                 'weapon_slots',
                 'upgrade_slots',
                 'bulk',
-                'description'],
+                'description',
+            ],
         },
         'armor_upgrades': {
-            'table': ['name',
-                'level',
-                'price',
-                'slots',
-                'armor_type',
-                'bulk'],
-            'modal': ['name',
+            'table': [
+                'name',
                 'level',
                 'price',
                 'slots',
                 'armor_type',
                 'bulk',
-                'description'],
+            ],
+            'modal': [
+                'level',
+                'price',
+                'slots',
+                'armor_type',
+                'bulk',
+                'description',
+            ],
         },
         'weapons': {
             'table': [
@@ -90,43 +96,58 @@ const DataDefinitions = {
             ]
         }, 
         'weapon_fusions': {
-            'table': ['name', 'level'],
-            'modal': ['name', 'level', 'description'],
+            'table': [
+                'name',
+                'level',
+            ],
+            'modal': [
+                'level',
+                'description',
+            ],
         },
         'weapon_manufacturers': {
-            'table': ['name',
+            'table': [
+                'name',
                 'description',
-                'price'],
-            'modal': ['name',
                 'price',
-                'description'],
+            ],
+            'modal': [
+                'price',
+                'description'
+            ],
         },
         'weapon_accessories': {
-            'table': ['name',
+            'table': [
+                'name',
                 'level',
                 'price',
-                'weapon_type'],
-            'modal': ['name',
+                'weapon_type',
+            ],
+            'modal': [
                 'level',
                 'price',
                 'bulk',
                 'capacity',
                 'usage',
                 'weapon_type',
-                'description'],
+                'description'
+            ],
         },
         'ammunition': {
-            'table': ['name',
+            'table': [
+                'name',
                 'level',
                 'price',
-                'capacity'],
-            'modal': ['name',
+                'capacity',
+            ],
+            'modal': [
                 'level',
                 'price',
                 'capacity',
                 'bulk',
                 'special',
-                'description'],
+                'description',
+            ],
         },
         'solarian_crystals': {
             'table': [
@@ -230,28 +251,33 @@ const DataDefinitions = {
                 'fort_save',
                 'addiction',
                 'track',
-                'effect'
+                'effect',
             ]
         },
         'weapon_materials': {
-            'table': ['name',
+            'table': [
+                'name',
                 'description',
                 'type',
-                'price'],
-            'modal': ['name',
+                'price',
+            ],
+            'modal': [
                 'type',
-                'price']
+                'price',
+            ]
         },
         'vehicles': {
-            'table': ['name',
+            'table': [
+                'name',
                 'level',
                 'description',
                 'price',
                 'type',
                 'speed',
                 'complement',
-                'passengers'],
-            'modal': ['name',
+                'passengers',
+            ],
+            'modal': [
                 'level',
                 'description',
                 'price',
@@ -264,7 +290,8 @@ const DataDefinitions = {
                 'climb_speed',
                 'burrow_speed',
                 'complement',
-                'passengers'],
+                'passengers',
+            ],
         },
     },
     'Character': {
@@ -275,14 +302,14 @@ const DataDefinitions = {
                 'mystic_level',
                 'technomancer_level',
                 'witchwarper_level',
-                {'effect_range': ['name', 'range_value']},
+                {'effect_range': ['name', 'range_value',]},
             ],
             'modal': [
                 'name',
                 'mystic_level',
                 'technomancer_level',
                 'witchwarper_level',
-                {'effect_range': ['name', 'description']},
+                {'effect_range': ['name',]},
                 'school',
                 'casting_time',
                 'effect',
@@ -291,13 +318,13 @@ const DataDefinitions = {
                 'duration',
                 'saving_throw',
                 'spell_resistance',
-                'long_description',
+                'description',
             ],
         },
         'skills': {
             'table': [
                 'name',
-                {'ability': ['name']},
+                {'ability': ['name',]},
                 'untrained',
                 'ac_penalty',
                 'envoy',
@@ -313,7 +340,7 @@ const DataDefinitions = {
             ],
             'modal': [
                 'name',
-                {'ability': ['name']},
+                {'ability': ['name',]},
                 'untrained',
                 'ac_penalty',
                 'envoy',
@@ -342,9 +369,7 @@ const DataDefinitions = {
                 'stamina_points',
                 'key_ability_score',
                 'skills_per_level',
-                { 
-                    'class_proficiencies': ['name'],
-                },
+                {'class_proficiencies': ['name']},
                 'long_description'
             ],
             'modalTabs': [
@@ -352,28 +377,34 @@ const DataDefinitions = {
             ]
         },
         'feats': {
-            'table': ['name',
+            'table': [
+                'name',
                 'prerequisities',
                 'description',
                 'combat'
             ],
-            'modal': ['prerequisities',
+            'modal': [
+                'prerequisities',
                 'long_description',
                 'combat'
             ]
         },
         'augmentations': {
-            'table': ['name',
+            'table': [
+                'name',
                 'level',
                 'type',
                 'system',
-                'price'],
-            'modal': ['name',
+                'price',
+            ],
+            'modal': [
+                'name',
                 'type',
                 'level',
                 'price',
                 'system',
-                'description'],
+                'description',
+            ],
         }
     }
 }
