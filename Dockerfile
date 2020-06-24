@@ -1,17 +1,14 @@
-# get the base node image
 FROM node:lts-slim
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY . .
+RUN yarn
+RUN yarn build
 
-# set the working dir for container
-WORKDIR /code
-
-# copy the json file first
-COPY ./package.json /code
-
-# install npm dependencies
-RUN npm install
-
-# copy other project files
-COPY . /code
-
-# build the folder
-CMD [ "yarn", "start" ]
+FROM node:lts-slim
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY --from=0 /usr/src/app/build ./build
+RUN yarn global add serve
+EXPOSE 3000
+CMD ["serve", "-s", "build"]

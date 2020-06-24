@@ -1,12 +1,12 @@
 export function properList(data, exclude = []) {
     let columns = {}
     Object.keys(data).forEach((column) => {
-        columns[column] = exclude.includes(column) ? column : columnToProper(column)
+        columns[column] = exclude.includes(column) ? column : complexToProper(column)
     })
     return columns
 }
 
-export function columnToProper(data) {
+export function complexToProper(data) {
     return data.split("_").map(split => (
         proper(split) )).join(" ").replace('And', '&')
 }

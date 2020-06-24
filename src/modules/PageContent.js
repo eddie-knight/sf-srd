@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Loader from 'react-loader-spinner';
+import Cookies from 'universal-cookie';
 
 import DataSourceRequest from './DataSourceRequest.js'
 import DataDefinitions from './DataDefinitions.js'
@@ -7,6 +8,7 @@ import Navbar from './Navbar.js'
 import Table from './Table.js'
 
 import {getLocal, setLocal} from './helpers';
+
 
 export default class PageContent extends Component {
     showTabMap = {}
@@ -16,6 +18,7 @@ export default class PageContent extends Component {
         data: {},
         active: '',
         tabContent: {},
+        style: './Superhero.css'
     }
 
     componentDidMount() {
@@ -61,7 +64,6 @@ export default class PageContent extends Component {
             this.getSections().then(response => {
                 this.sections = response
                 // setLocal('ds-sections', response)
-                console.log("!?")
                 this.getData()
             })
         }
@@ -139,12 +141,14 @@ export default class PageContent extends Component {
         }
         let output = this.renderTabContent()
         return (<>
-            <Navbar loaded={Object.keys(this.state.data)} active={this.state.active} showTab={this.showTab}/>
-            <div id="body" className="tab-content">
-                <div className="tab-pane fade show active" role="tabpanel" id="home">
-                    <p>Home.</p>
+            <div className="app">
+                <Navbar loaded={Object.keys(this.state.data)} active={this.state.active} showTab={this.showTab}/>
+                <div id="body" className="tab-content">
+                    <div className="tab-pane fade show active" role="tabpanel" id="home">
+                        <p>Home.</p>
+                    </div>
+                    { output }
                 </div>
-                { output }
             </div>
         </>)
     }

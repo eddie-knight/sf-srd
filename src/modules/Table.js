@@ -9,16 +9,18 @@ import {getLocal, setLocal} from './helpers';
 
 export default class Table extends Component {
 
-  prepare_data() {
+  async prepare_data() {
     this.data_length = this.props.data.length
     this.setAbbreviatedRelationalNames()
-    setLocal(`${this.props.title}-tableData`, {'columns': this.columns, 'rows': this.rows})
+    setLocal(`${this.props.title}-tableData`, {
+      'columns': this.columns, 'rows': this.rows})
     this.setTableState()
   }
 
   setTableState() {
     this.setRows()
     if (!this.columns) {
+      console.log("Setting columns")
       this.setTitles()
       this.setColumns()  
     }
@@ -30,6 +32,7 @@ export default class Table extends Component {
 
   setRows() {
     if (!this.rows) {
+      console.log("setting rows from data:", this.props.data)
       this.rows = JSON.parse(JSON.stringify((this.props.data)))
     }
     this.rows.forEach((row, i) => {
@@ -38,8 +41,7 @@ export default class Table extends Component {
           this.rows[i][col_name] = ''
         } else if (row[col_name] !== '' && !isNaN(typecastNumber(row[col_name]))) {
           this.rows[i][col_name] = typecastNumber(row[col_name])
-        }
-        else if (typeof row[col_name] == 'object') {
+        } else if (typeof row[col_name] == 'object') {
           this.parseNestedData(row[col_name], col_name, i)
         }
         let name = this.rows[i]['name']
@@ -111,7 +113,6 @@ export default class Table extends Component {
         console.log("preparing data")
         this.prepare_data()
       } else if (!this.rows) {
-        console.log("local data found", tableData)
         this.rows = tableData['rows']
         this.columns = tableData['columns']
         this.setRows()
@@ -135,7 +136,9 @@ export default class Table extends Component {
           striped
           bordered
           responsive
-          order={['age', 'desc']}
+          small={this.state.columns.length > 7}
+          btn={true}
+          sortable={true}
           paging={false}
           entries={this.data_length}
           entriesOptions={[10,25,50,this.data_length]}

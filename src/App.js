@@ -11,7 +11,7 @@ import PageContent from './modules/PageContent.js'
 
 const cookies = new Cookies();
 const style = cookies.get('layout') || 'Yeti'
-require(`./assets/${style}.css`);
+require(`./${style}.css`);
 
 
 function App() {  

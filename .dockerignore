@@ -1,0 +1,8 @@
+node_modules/
+build/
+.git
+*/build/
+*/.git/
+.gitignore
+Dockerfile
+.editorconfig

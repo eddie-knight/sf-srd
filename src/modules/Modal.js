@@ -3,7 +3,7 @@ import {Modal} from 'react-bootstrap'
 
 import DataDefinitions from './DataDefinitions'
 import DataSourceRequest from './DataSourceRequest'
-import {columnToProper, getLocal, setLocal} from './helpers'
+import {complexToProper, getLocal, setLocal} from './helpers'
 
 
 export default class DataSourceModal extends Component {
@@ -19,33 +19,33 @@ export default class DataSourceModal extends Component {
     let localData = getLocal(type)
     if (!localData[name]) {
       console.log(`Fetching ${type} ${name}`)
-      DataSourceRequest(
-        type,
-        fields,
-        `(name_is: "${name}")`
-      ).then(response => {
-        let parsedData = Object.keys(response[0]).map( entry => {
-          let data = response[0][entry]
-          return this.parseDataEntry(type, entry, data)
-        })
-        let finalParsedData = []
-        parsedData.forEach((entry) => {
-          if (Array.isArray(entry)) {
-            entry.forEach(item => {
-              finalParsedData.push(item)
-            })
-          } else {
-            finalParsedData.push(entry)
-          }
-        })
-        console.log("!", finalParsedData)
-        localData[name] = finalParsedData
+      DataSourceRequest(type, fields, `(name_is: "${name}")`)
+      .then(response => {
+        localData[name] = this.parseResponseData(response, type)
         setLocal(type, localData)
         this.setState({data: localData[name]})
       })
     } else {
       this.setState({data: localData[name]})
     }
+  }
+
+  parseResponseData(response, type) {
+    let finalParsedData = []
+    let parsedData = Object.keys(response[0]).map( entry => {
+      let data = response[0][entry]
+      return this.parseDataEntry(type, entry, data)
+    })
+    parsedData.forEach((entry) => {
+      if (Array.isArray(entry)) {
+        entry.forEach(item => {
+          finalParsedData.push(item)
+        })
+      } else {
+        finalParsedData.push(entry)
+      }
+    })
+    return finalParsedData
   }
 
   parseDataEntry(table, entry, data) {
@@ -63,7 +63,7 @@ export default class DataSourceModal extends Component {
 
   parseModalArray(title, data) {
     return `
-      <strong>${columnToProper(title)}</strong>:
+      <strong>${complexToProper(title)}</strong>:
       <ul><li>${data.map(entry => {return this.parseModalObject(title, entry, true)}).join('</li><li>')}</li></ul>
       `
   }
@@ -86,9 +86,9 @@ export default class DataSourceModal extends Component {
       return data
     }
     if (title === 'name') {
-      return `<strong>${columnToProper(table)}</strong>:<br /> ${data}`
+      return `<strong>${complexToProper(table)}</strong>:<br /> ${data}`
     }
-    return `<strong>${columnToProper(title)}</strong>:<br /> ${data}`
+    return `<strong>${complexToProper(title)}</strong>:<br /> ${data}`
   }
 
   show(name, type, section) {

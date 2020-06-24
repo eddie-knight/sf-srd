@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 // import HomePage from './HomeContent.js'
-import { columnToProper } from './helpers'
+import { complexToProper } from './helpers'
 import DataDefinitions from './DataDefinitions.js'
 import StyleSelectionTab from './StyleSelectionTab.js'
 
@@ -16,7 +16,7 @@ class DataSourceMenuTabs extends Component {
                         {Object.keys(DataDefinitions[section]).map(title => {
                             let disabled = this.props.loaded.includes(title) ? '' : 'disabled'
                             let active = (title === this.props.active) ? 'active' : ''
-                            return <div><a className={`dropdown-item ${disabled} ${active} {text-left`} onClick={() => this.props.showTab(title)} data-toggle="tab" href={('#' + title)} role="tab">{columnToProper(title)}</a></div>
+                            return <div><a className={`dropdown-item ${disabled} ${active} {text-left`} onClick={() => this.props.showTab(title)} data-toggle="tab" href={('#' + title)} role="tab">{complexToProper(title)}</a></div>
                         })}
                     </div>
                 </li>
