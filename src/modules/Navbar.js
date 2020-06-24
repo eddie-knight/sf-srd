@@ -10,7 +10,7 @@ class DataSourceMenuTabs extends Component {
     render() {
         return Object.keys(DataDefinitions).map(section => {
             return (
-                <li className="nav-item dropdown show">
+                <li className="nav-item dropdown">
                     <a className="nav-link dropdown-toggle" data-toggle="dropdown" href={'#Menu-'+section} role="button" aria-haspopup="true" aria-expanded="false">{section}</a>
                     <div className="dropdown-menu" style={{}}>
                         {Object.keys(DataDefinitions[section]).map(title => {

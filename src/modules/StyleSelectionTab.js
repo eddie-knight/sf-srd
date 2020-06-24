@@ -16,7 +16,7 @@ export default class StyleSelectionTab extends Component {
     }
     render() {
         return (
-            <li className="nav-item dropdown show">
+            <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" data-toggle="dropdown" href='#style-change' role="button" aria-haspopup="true" aria-expanded="false">Style</a>
                 <div className="dropdown-menu" style={{}}>
                     {STYLES.map(title => (

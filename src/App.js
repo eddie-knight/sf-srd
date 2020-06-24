@@ -11,17 +11,12 @@ import PageContent from './modules/PageContent.js'
 
 const cookies = new Cookies();
 const style = cookies.get('layout') || 'Yeti'
-require(`./${style}.css`);
-
+require(`./styles/${style}.css`);
+require('./styles/main.scss')
 
 function App() {  
-  return (
-    <>
-    <div className="app">
-      <PageContent />
-    </div>
-    </>
-  );
+  localStorage.clear()
+  return <PageContent />
 }
 
 export default App;

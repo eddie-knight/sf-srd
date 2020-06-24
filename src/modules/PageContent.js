@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
 import Loader from 'react-loader-spinner';
-import Cookies from 'universal-cookie';
 
 import DataSourceRequest from './DataSourceRequest.js'
 import DataDefinitions from './DataDefinitions.js'
 import Navbar from './Navbar.js'
 import Table from './Table.js'
-
-import {getLocal, setLocal} from './helpers';
-
 
 export default class PageContent extends Component {
     showTabMap = {}
@@ -18,7 +14,6 @@ export default class PageContent extends Component {
         data: {},
         active: '',
         tabContent: {},
-        style: './Superhero.css'
     }
 
     componentDidMount() {
@@ -43,35 +38,27 @@ export default class PageContent extends Component {
             this.fetchingData = true
             let section = this.sections[type]
             console.log(section, type)
-            // let dataTitle = `data-${section}-${type}`
-            if (true) {
-                console.log("Fetching data from API:", section, type)
-                DataSourceRequest(type, DataDefinitions[section][type]['table'])
-                .then(response => {
-                    console.log('Data retrieved from API:', type)
-                    output[type] = response
-                    this.setState({'data': output})
-                });
-            }
+            console.log("Fetching data from API:", section, type)
+            DataSourceRequest(type, DataDefinitions[section][type]['table'])
+            .then(response => {
+                console.log('Data retrieved from API:', type)
+                output[type] = response
+                this.setState({'data': output})
+            });
         })
     }
 
     loadData() {
         this.showTab = this.showTabFunc.bind(this)
         this.loadingData = true
-        let localSections = getLocal('ds-sections')
-        if (Object.keys(localSections).length === 0) {
-            this.getSections().then(response => {
-                this.sections = response
-                // setLocal('ds-sections', response)
-                this.getData()
-            })
-        }
+        this.getSections().then(response => {
+            this.sections = response
+            this.getData()
+        })
     }
 
     prepareData() {
         if (this.state.data && this.sections){
-            localStorage.clear()
             // Preparation is complete, return status as 'not loading'
             return false
         }
@@ -140,7 +127,7 @@ export default class PageContent extends Component {
             return loading
         }
         let output = this.renderTabContent()
-        return (<>
+        return (
             <div className="app">
                 <Navbar loaded={Object.keys(this.state.data)} active={this.state.active} showTab={this.showTab}/>
                 <div id="body" className="tab-content">
@@ -150,6 +137,6 @@ export default class PageContent extends Component {
                     { output }
                 </div>
             </div>
-        </>)
+        )
     }
 }
