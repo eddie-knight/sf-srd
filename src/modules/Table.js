@@ -12,9 +12,9 @@ export default class Table extends Component {
   async prepare_data() {
     this.data_length = this.props.data.length
     this.setAbbreviatedRelationalNames()
+    this.setTableState()
     setLocal(`${this.props.title}-tableData`, {
       'columns': this.columns, 'rows': this.rows})
-    this.setTableState()
   }
 
   setTableState() {

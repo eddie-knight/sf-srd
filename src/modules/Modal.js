@@ -15,7 +15,7 @@ export default class DataSourceModal extends Component {
     }
   }
 
-  getData(name, type, fields) {
+  async getData(name, type, fields) {
     let localData = getLocal(type)
     if (!localData[name]) {
       console.log(`Fetching ${type} ${name}`)
@@ -93,10 +93,11 @@ export default class DataSourceModal extends Component {
 
   show(name, type, section) {
     let fields = DataDefinitions[section][type]['modal']
-    this.getData(name, type, fields)
-    this.setState({
-      showModal: true,
-      title: name,
+    this.getData(name, type, fields).then(() => {
+      setTimeout(() => {this.setState({
+        showModal: true,
+        title: name,
+      })},300)
     })
   }
 

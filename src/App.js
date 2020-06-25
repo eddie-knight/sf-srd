@@ -15,7 +15,6 @@ require(`./styles/${style}.css`);
 require('./styles/main.scss')
 
 function App() {  
-  localStorage.clear()
   return <PageContent />
 }
 
