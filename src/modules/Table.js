@@ -136,7 +136,7 @@ export default class Table extends Component {
           striped
           bordered
           responsive
-          small={this.state.columns.length > 7}
+          small={this.state.columns.length >= 7}
           btn={true}
           sortable={true}
           paging={false}
