@@ -302,7 +302,7 @@ const DataDefinitions = {
                 'mystic_level',
                 'technomancer_level',
                 'witchwarper_level',
-                {'effect_range': ['name', 'range_value',]},
+                {'effect_range': ['name', '_sort_value',]},
             ],
             'modal': [
                 'name',

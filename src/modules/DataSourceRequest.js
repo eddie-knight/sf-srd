@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+class DataSourceError extends Error {
+}
+
 function parse_fields(data) {
   // Parse dict of arrays into GraphQL request
   // Parameters
@@ -32,14 +35,13 @@ function parse_fields(data) {
 export default async function DataSourceRequest(type, fields, terms='') {
     let output = {}
     let query = { 'query': `{ ${type}${terms} { ${parse_fields(fields)} } }` }
-    // console.log('Query String:', query['query'])
     await axios.post(`https://sfdatasource.com`, query)
     .then(response => {
       output = response.data.data[type]
     })
     .catch((error) => {
       console.error('Error on query:', query['query'], error);
-      throw TypeError('Unexpected response from DataSource API')
+      throw DataSourceError('Unexpected response from DataSource API; See logs for details.')
     });
     return output
 }
