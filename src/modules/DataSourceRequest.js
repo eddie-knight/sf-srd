@@ -41,7 +41,7 @@ export default async function DataSourceRequest(type, fields, terms='') {
     })
     .catch((error) => {
       console.error('Error on query:', query['query'], error);
-      throw DataSourceError('Unexpected response from DataSource API; See logs for details.')
+      throw new DataSourceError('Unexpected response from DataSource API; See logs for details.')
     });
     return output
 }
