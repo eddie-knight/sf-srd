@@ -2,10 +2,9 @@ import React, {Component} from 'react';
 import Loader from 'react-loader-spinner';
 import { MDBDataTable } from 'mdbreact';
 
-import { typecastNumber, proper, properList } from './helpers';
+import { typecastNumber, proper, properList, limitLength, getLocal, setLocal } from './helpers';
 import DataSourceModal from './Modal'
 import DataDefinitions from './DataDefinitions';
-import {getLocal, setLocal} from './helpers';
 
 export default class Table extends Component {
 
@@ -41,12 +40,15 @@ export default class Table extends Component {
           this.rows[i][col_name] = ''
         } else if (row[col_name] !== '' && !isNaN(typecastNumber(row[col_name]))) {
           this.rows[i][col_name] = typecastNumber(row[col_name])
-        } else if (typeof row[col_name] == 'object') {
+        } else if (typeof row[col_name] === 'string') {
+          this.rows[i][col_name] = limitLength(row[col_name], 120)
+        }
+          else if (typeof row[col_name] == 'object') {
           this.parseNestedData(row[col_name], col_name, i)
         }
-        let name = this.rows[i]['name']
-        this.rows[i]['clickEvent'] = () => this.clickEvent(name)
       })
+      let name = this.rows[i]['name']
+      this.rows[i]['clickEvent'] = () => this.clickEvent(name)
     })
   }
 

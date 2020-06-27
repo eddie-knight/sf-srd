@@ -21,6 +21,13 @@ export function typecastNumber(value) {
     return Number(value)
 }
 
+export function limitLength(string, maxLength) {
+    if (typeof string === 'string' && string.length > maxLength) {
+        return string.substring(0, maxLength) + '...'
+    }
+    return string
+}
+
 export function getLocal(name) {
     return JSON.parse(localStorage.getItem(name)) || {}
 }

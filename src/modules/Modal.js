@@ -117,14 +117,16 @@ export default class DataSourceModal extends Component {
         <Modal.Body scrollable="true">
               {Object.keys(this.state.data).map(entry => {
                 let className = 'modalEntry'
+                let data = this.state.data[entry]
                 if (
-                  this.state.data[entry].includes('escription</strong>') 
-                  || this.state.data[entry].includes('<ul>')
+                  data.includes('escription</strong>') 
+                  || data.includes('<ul>')
+                  || data.length > 80
                 ) {
                   className='modalEntryLong'
                 }
-                if (this.state.data[entry]) {
-                  return <div className={className} dangerouslySetInnerHTML={{__html: this.state.data[entry]}}></div>
+                if (data) {
+                  return <div className={className} dangerouslySetInnerHTML={{__html: data}}></div>
                 }
                 return ''
               })}
