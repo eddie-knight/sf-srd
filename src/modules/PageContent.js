@@ -30,7 +30,6 @@ export default class PageContent extends Component {
                 sections[type] = section
             })
         })
-        console.log(sections)
         return sections
     }
 
@@ -39,8 +38,7 @@ export default class PageContent extends Component {
         Object.keys(this.sections).forEach(type => {
             this.fetchingData = true
             let section = this.sections[type]
-            console.log(section, type)
-            console.log("Fetching data from API:", section, type)
+            console.log("Fetching data from API:", type)
             DataSourceRequest(type, DataDefinitions[section][type]['table'])
             .then(response => {
                 console.log('Data retrieved from API:', type)
