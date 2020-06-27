@@ -16,14 +16,15 @@ export default class StyleSelectionTab extends Component {
     }
     render() {
         return (
-            <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" data-toggle="dropdown" href='#style-change' role="button" aria-haspopup="true" aria-expanded="false">Style</a>
+            <div className="col-sm-2">
+                <a className="nav-link dropdown-toggle" data-toggle="dropdown" href='#style-change' role="button" aria-haspopup="true" aria-expanded="false">
+                    Change Style</a>
                 <div className="dropdown-menu" style={{}}>
                     {STYLES.map(title => (
                         <div>{this.styleButton(title)}</div>
                     ))}
                 </div>
-            </li>
+            </div>
         )
     }
 }
