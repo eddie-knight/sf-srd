@@ -6,6 +6,8 @@ import DataDefinitions from './DataDefinitions.js'
 import Navbar from './Navbar.js'
 import Table from './Table.js'
 
+import {complexToProper} from './helpers'
+
 export default class PageContent extends Component {
     showTabMap = {}
     loadingTables = false
@@ -84,6 +86,7 @@ export default class PageContent extends Component {
             let classes = `tab-pane fade ${(this.state.active === title) ? 'active' : ''}`
             content[title] = (
                 <div className={classes} role="tabpanel" key={title} id={title}>
+                    <h2 className="text-center">{complexToProper(title)}</h2>
                     <Table 
                         section={this.sections[title]}
                         title={title}
