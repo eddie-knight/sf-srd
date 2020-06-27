@@ -7,7 +7,7 @@ const style = cookies.get('layout') || 'Yeti'
 require(`./styles/${style}.css`);
 require('./styles/main.scss')
 
-DataSourceRequest('__schema', [{'types': ['name']} ])
+DataSourceRequest('classes', ['name'])
 .then(canConnect => {
     const expiry = cookies.get("localStorageExpiry")
     if (canConnect && (!expiry || expiry < Date.now()) ) {
