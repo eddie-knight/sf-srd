@@ -33,6 +33,7 @@ function parse_fields(data) {
 }
 
 export default async function DataSourceRequest(type, fields, terms='') {
+    console.log("Querying DataSource API for", type)
     let output = {}
     let query = { 'query': `{ ${type}${terms} { ${parse_fields(fields)} } }` }
     await axios.post(`https://sfdatasource.com`, query)
