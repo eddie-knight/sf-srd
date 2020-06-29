@@ -25,6 +25,11 @@ body {
   max-height: 90vh;
 }
 
+.modalContent {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .card {
   background-color: unset;
 }

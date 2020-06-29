@@ -98,6 +98,8 @@ export default class DataSourceModal extends Component {
     this.getData(name, type, fields).then(() => {
       setTimeout(() => {this.setState({
         showModal: true,
+        type: type,
+        section: section,
         title: name,
         modalTabs: modalTabs,
       })},300)
@@ -114,16 +116,24 @@ export default class DataSourceModal extends Component {
     if (!this.state.data) { return null }
     return (
       <Modal className="card border-secondary" show={this.state.showModal} onHide={() => this.onHide()}>
-        <ModalContent title={this.state.title} tabs={this.state.modalTabs} data={this.state.data}/>
+        <ModalContent 
+          title={this.state.title}
+          type={this.state.type}
+          section={this.state.section}
+          tabs={this.state.modalTabs}
+          data={this.state.data}
+        />
       </Modal>
     )
   }
 }
 
 class ModalContent extends Component {
+
   state = {
     output: this.renderDataContent()
   }
+
   showData(datatype = "main") {
     if (datatype === "main") {
       this.setState({
@@ -132,9 +142,8 @@ class ModalContent extends Component {
     }
     else {
       this.setState({
-        output: "Lorem Ipsum Diddly doo da Day"
+        output: this.renderNestedContent(datatype)
       })
-
     }
   }
 
@@ -143,23 +152,30 @@ class ModalContent extends Component {
       { this.modalHeader() }
       <Modal.Body scrollable="true">
         { this.modalTabs() }
-        { this.state.output }
       </Modal.Body>
     </>)
   }
 
   modalTabs() {
-    let tabs = this.props.tabs
-    let title = this.props.title
-    console.log(tabs, title)
-    return (
-      <div class="row modalEntryLong">
-        <a className="nav-link active" data-toggle="tab" onClick={() => this.showData()} href={'#' + title}>Base Data</a>
-        { Object.keys(tabs).map(key => {
-          return <a className="nav-link" data-toggle="tab" onClick={() => this.showData(key)} href={"#data-"+key}>{complexToProper(key)}</a>
-        })}
+    if (!this.props.tabs) {
+      console.log(this.props.tabs)
+      return this.state.output
+    }
+    return (<>
+      <div className="col-sm-12">
+        <ul className="nav nav-tabs">
+          <li className="nav-item">
+            <a className="nav-link active" data-toggle="tab" onClick={() => this.showData()} href={'#' + this.props.title}>Base Data</a>
+          </li>
+          <li className="nav-item">
+            { Object.keys(this.props.tabs).map(key => {
+              return <a className="nav-link" data-toggle="tab" onClick={() => this.showData(key)} href={"#data-"+key}>{complexToProper(key)}</a>
+            })}
+          </li>
+        </ul>
       </div>
-      )
+      { this.state.output }
+    </>)
   }
 
   modalHeader() {
@@ -169,6 +185,10 @@ class ModalContent extends Component {
       </Modal.Header>
       )
     }
+
+  renderNestedContent(subtype) {
+    return <div className="modalEntry">{subtype}</div>
+  }
 
   renderDataContent() {
     if (!this.dataContent) {
