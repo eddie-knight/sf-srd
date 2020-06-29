@@ -372,9 +372,14 @@ const DataDefinitions = {
                 {'class_proficiencies': ['name']},
                 'long_description'
             ],
-            'modalTabs': [
-                'class_features',
-            ]
+            'modalTabs': {
+                'class_features': [
+                    'name',
+                    'alternate',
+                    'description',
+                    {'class_special_skills': ['name', 'description',]}
+                ]
+            }
         },
         'feats': {
             'table': [

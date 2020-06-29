@@ -12,6 +12,7 @@ export default class DataSourceModal extends Component {
     super(props);
     this.state = {
       showModal: false,
+      standardContentActive: true,
     }
   }
 
@@ -93,10 +94,12 @@ export default class DataSourceModal extends Component {
 
   show(name, type, section) {
     let fields = DataDefinitions[section][type]['modal']
+    let modalTabs = DataDefinitions[section][type]['modalTabs'] || null
     this.getData(name, type, fields).then(() => {
       setTimeout(() => {this.setState({
         showModal: true,
         title: name,
+        modalTabs: modalTabs,
       })},300)
     })
   }
@@ -111,27 +114,82 @@ export default class DataSourceModal extends Component {
     if (!this.state.data) { return null }
     return (
       <Modal className="card border-secondary" show={this.state.showModal} onHide={() => this.onHide()}>
-        <Modal.Header closeButton>
-          <Modal.Title>{this.state.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body scrollable="true">
-              {Object.keys(this.state.data).map(entry => {
-                let className = 'modalEntry'
-                let data = this.state.data[entry]
-                if (
-                  data.includes('escription</strong>') 
-                  || data.includes('<ul>')
-                  || data.length > 80
-                ) {
-                  className='modalEntryLong'
-                }
-                if (data) {
-                  return <div className={className} dangerouslySetInnerHTML={{__html: data}}></div>
-                }
-                return ''
-              })}
-          </Modal.Body>
+        <ModalContent title={this.state.title} tabs={this.state.modalTabs} data={this.state.data}/>
       </Modal>
     )
+  }
+}
+
+class ModalContent extends Component {
+  state = {
+    output: this.renderDataContent()
+  }
+  showData(datatype = "main") {
+    if (datatype === "main") {
+      this.setState({
+        output: this.renderDataContent()
+      })
+    }
+    else {
+      this.setState({
+        output: "Lorem Ipsum Diddly doo da Day"
+      })
+
+    }
+  }
+
+  render() {
+    return (<>
+      { this.modalHeader() }
+      <Modal.Body scrollable="true">
+        { this.modalTabs() }
+        { this.state.output }
+      </Modal.Body>
+    </>)
+  }
+
+  modalTabs() {
+    let tabs = this.props.tabs
+    let title = this.props.title
+    console.log(tabs, title)
+    return (
+      <div class="row modalEntryLong">
+        <a className="nav-link active" data-toggle="tab" onClick={() => this.showData()} href={'#' + title}>Base Data</a>
+        { Object.keys(tabs).map(key => {
+          return <a className="nav-link" data-toggle="tab" onClick={() => this.showData(key)} href={"#data-"+key}>{complexToProper(key)}</a>
+        })}
+      </div>
+      )
+  }
+
+  modalHeader() {
+    return (
+      <Modal.Header closeButton>
+        <Modal.Title>{this.props.title}</Modal.Title>
+      </Modal.Header>
+      )
+    }
+
+  renderDataContent() {
+    if (!this.dataContent) {
+      this.dataContent = (
+        Object.keys(this.props.data).map(entry => {
+          let className = 'modalEntry'
+          let data = this.props.data[entry]
+          if (
+            data.includes('escription</strong>') 
+            || data.includes('<ul>')
+            || data.length > 80
+          ) {
+            className='modalEntryLong'
+          }
+          if (data) {
+            return <div className={className} dangerouslySetInnerHTML={{__html: data}}></div>
+          }
+          return ''
+        })
+      )
+    }
+    return this.dataContent
   }
 }
