@@ -36,12 +36,13 @@ export default async function DataSourceRequest(type, fields, terms='') {
     console.log("Querying DataSource API for", type)
     let output = {}
     let query = { 'query': `{ ${type}${terms} { ${parse_fields(fields)} } }` }
-    return axios.post(`https://sfdatasource.com`, query)
+    await axios.post(`https://sfdatasource.com`, query)
     .then(response => {
-      return response.data.data[type]
+      output = response.data.data[type]
     })
     .catch((error) => {
       console.error('Error on query:', query['query'], error);
       throw new DataSourceError('Unexpected response from DataSource API; See logs for details.')
     });
+    return output
 }
