@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Loader from 'react-loader-spinner';
 
 import DataSourceRequest from './DataSourceRequest.js'
-import DataDefinitions from './DataDefinitions.js'
+import DataDefinitions from '../DataDefinitions.js'
 import Navbar from './Navbar.js'
 import Table from './Table.js'
 
