@@ -1,38 +1,15 @@
 import React, {Component} from 'react'
 import {Modal} from 'react-bootstrap'
 
-import DataDefinitions from './DataDefinitions'
+import DataDefinitions from '../DataDefinitions'
 import DataSourceRequest from './DataSourceRequest'
 import {complexToProper, getLocal, setLocal} from './helpers'
 
 
-export default class DataSourceModal extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      showModal: false,
-      standardContentActive: true,
-    }
-  }
-
-  async getData(name, type, fields) {
-    let localData = getLocal(type)
-    if (!localData[name]) {
-      console.log(`Fetching ${type} ${name}`)
-      DataSourceRequest(type, fields, `(name_is: "${name}")`)
-      .then(response => {
-        localData[name] = this.parseResponseData(response, type)
-        setLocal(type, localData)
-        this.setState({data: localData[name]})
-      })
-    } else {
-      this.setState({data: localData[name]})
-    }
-  }
+class ModalABC extends Component {
 
   parseResponseData(response, type) {
-    let finalParsedData = []
+    let output = []
     let parsedData = Object.keys(response[0]).map( entry => {
       let data = response[0][entry]
       return this.parseDataEntry(type, entry, data)
@@ -40,13 +17,13 @@ export default class DataSourceModal extends Component {
     parsedData.forEach((entry) => {
       if (Array.isArray(entry)) {
         entry.forEach(item => {
-          finalParsedData.push(item)
+          output.push(item)
         })
       } else {
-        finalParsedData.push(entry)
+        output.push(entry)
       }
     })
-    return finalParsedData
+    return output
   }
 
   parseDataEntry(table, entry, data) {
@@ -92,6 +69,35 @@ export default class DataSourceModal extends Component {
     return `<strong>${complexToProper(title)}</strong>:<br /> ${data}`
   }
 
+  async getData(name, type, fields) {
+    let localData = getLocal(type)
+    if (!localData[name]) {
+      console.log(`Fetching ${type} ${name}`)
+      DataSourceRequest(type, fields, `(name_is: "${name}")`)
+      .then(response => {
+        console.log(response)
+        localData[name] = this.parseResponseData(response, type)
+        setLocal(type, localData)
+        this.setState({data: localData[name]})
+        console.log(localData[name])
+      })
+    } else {
+      this.setState({data: localData[name]})
+    }
+  }
+}
+
+
+export default class DataSourceModal extends ModalABC {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false,
+      standardContentActive: true,
+    }
+  }
+
   show(name, type, section) {
     let fields = DataDefinitions[section][type]['modal']
     let modalTabs = DataDefinitions[section][type]['modalTabs'] || null
@@ -116,8 +122,8 @@ export default class DataSourceModal extends Component {
     if (!this.state.data) { return null }
     return (
       <Modal className="card border-secondary" show={this.state.showModal} onHide={() => this.onHide()}>
-        <ModalContent 
-          title={this.state.title}
+        <ModalSection
+          name={this.state.title}
           type={this.state.type}
           section={this.state.section}
           tabs={this.state.modalTabs}
@@ -128,23 +134,10 @@ export default class DataSourceModal extends Component {
   }
 }
 
-class ModalContent extends Component {
-
+class ModalSection extends ModalABC {
   state = {
-    output: this.renderDataContent()
-  }
-
-  showData(datatype = "main") {
-    if (datatype === "main") {
-      this.setState({
-        output: this.renderDataContent()
-      })
-    }
-    else {
-      this.setState({
-        output: this.renderNestedContent(datatype)
-      })
-    }
+    data: {},
+    output: undefined,
   }
 
   render() {
@@ -156,20 +149,27 @@ class ModalContent extends Component {
     </>)
   }
 
+  componentDidMount() {
+    this.prepareMainContent()
+    if (this.props.tabs) {
+      this.prepareNestedContent()
+    }
+    console.log(this.state.data)
+  }
+
   modalTabs() {
     if (!this.props.tabs) {
-      console.log(this.props.tabs)
       return this.state.output
     }
     return (<>
       <div className="col-sm-12">
         <ul className="nav nav-tabs">
           <li className="nav-item">
-            <a className="nav-link active" data-toggle="tab" onClick={() => this.showData()} href={'#' + this.props.title}>Base Data</a>
+            <a className="nav-link active" data-toggle="tab" onClick={() => this.setState({ 'output': this.state.data['main'] })} href={'#' + this.props.name}>Base Data</a>
           </li>
           <li className="nav-item">
-            { Object.keys(this.props.tabs).map(key => {
-              return <a className="nav-link" data-toggle="tab" onClick={() => this.showData(key)} href={"#data-"+key}>{complexToProper(key)}</a>
+            { Object.keys(this.props.tabs).map(tab => {
+              return <a className="nav-link" data-toggle="tab" onClick={() => this.setState({ 'output': this.state.data[tab] })} href={"#data-"+tab}>{complexToProper(tab)}</a>
             })}
           </li>
         </ul>
@@ -181,35 +181,62 @@ class ModalContent extends Component {
   modalHeader() {
     return (
       <Modal.Header closeButton>
-        <Modal.Title>{this.props.title}</Modal.Title>
+        <Modal.Title>{this.props.name}</Modal.Title>
       </Modal.Header>
       )
     }
 
-  renderNestedContent(subtype) {
-    return <div className="modalEntry">{subtype}</div>
+
+  prepareNestedContent() {
+    let output = this.state.data
+    Object.keys(this.props.tabs).forEach(tab => {
+      if (!output[tab]) {
+        console.log(
+          this.props.name,
+          this.props.type,
+          {tab: DataDefinitions[this.props.section][this.props.type]['modalTabs']},
+        )
+        this.getData(
+          this.props.name,
+          this.props.type,
+          {tab: DataDefinitions[this.props.section][this.props.type]['modalTabs']},
+        )
+      }
+    })
+    this.setState({ 'data': output })
   }
 
-  renderDataContent() {
-    if (!this.dataContent) {
-      this.dataContent = (
-        Object.keys(this.props.data).map(entry => {
+  prepareMainContent() {
+    if (!this.state.data['main']) {
+      let data = this.prepareEntry('main', this.props.data)
+      this.setState({
+        'data': data,
+        'output': data['main']
+      })
+    }
+  }
+
+  prepareEntry(name, data) {
+    let output = this.state.data
+    if (!output[name]) {
+        output[name] = (
+        Object.keys(data).map(i => {
           let className = 'modalEntry'
-          let data = this.props.data[entry]
+          let entry = data[i]
           if (
-            data.includes('escription</strong>') 
-            || data.includes('<ul>')
-            || data.length > 80
+            entry.includes('escription</strong>')
+            || entry.includes('<ul>')
+            || entry.length > 80
           ) {
             className='modalEntryLong'
           }
-          if (data) {
-            return <div className={className} dangerouslySetInnerHTML={{__html: data}}></div>
+          if (entry) {
+            return <div className={className} dangerouslySetInnerHTML={{__html: entry}}></div>
           }
           return ''
         })
       )
     }
-    return this.dataContent
+    return output
   }
 }
