@@ -4,7 +4,7 @@ import { MDBDataTable } from 'mdbreact';
 
 import { typecastNumber, proper, properList, limitLength, getLocal, setLocal } from './helpers';
 import DataSourceModal from './Modal'
-import DataDefinitions from './DataDefinitions';
+import DataDefinitions from '../DataDefinitions';
 
 export default class Table extends Component {
 

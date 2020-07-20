@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 // import HomePage from './HomeContent.js'
 import { complexToProper } from './helpers'
-import DataDefinitions from './DataDefinitions.js'
+import DataDefinitions from '../DataDefinitions.js'
 import StyleSelectionTab from './StyleSelectionTab.js'
 
 
