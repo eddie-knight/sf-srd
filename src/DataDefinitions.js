@@ -154,7 +154,7 @@ const DataDefinitions = {
                 'name', 'level', 'price', 'damage', 'critical', 'special',
             ],
             'modal': [
-                'name', 'level', 'price', 'damage', 'critical', 'special', 'description',
+                'level', 'price', 'damage', 'critical', 'special', 'description',
             ],
         }
     },
@@ -171,7 +171,6 @@ const DataDefinitions = {
                 'hands'
             ],
             'modal': [
-                'name',
                 'type',
                 'level',
                 'price',
@@ -190,7 +189,6 @@ const DataDefinitions = {
                 'bulk'
             ],
             'modal': [
-                'name',
                 'type',
                 'price',
                 'bulk'
@@ -209,7 +207,6 @@ const DataDefinitions = {
                 'cure'
             ],
             'modal': [
-                'name',
                 'level',
                 'price',
                 'type',
@@ -227,7 +224,6 @@ const DataDefinitions = {
                 'price'
             ],
             'modal': [
-                'name',
                 'level',
                 'price',
             ],
@@ -244,7 +240,6 @@ const DataDefinitions = {
                 'effect'
             ],
             'modal': [
-                'name',
                 'level',
                 'price',
                 'type',
@@ -305,7 +300,6 @@ const DataDefinitions = {
                 {'effect_range': ['name', '_sort_value',]},
             ],
             'modal': [
-                'name',
                 'mystic_level',
                 'technomancer_level',
                 'witchwarper_level',
@@ -339,7 +333,6 @@ const DataDefinitions = {
                 'witchwarper'
             ],
             'modal': [
-                'name',
                 {'ability': ['name',]},
                 'untrained',
                 'ac_penalty',
@@ -357,7 +350,6 @@ const DataDefinitions = {
         },
         'classes': {
             'table': [
-                'name',
                 'key_ability_score',
                 'hit_points',
                 'stamina_points',
@@ -403,7 +395,6 @@ const DataDefinitions = {
                 'price',
             ],
             'modal': [
-                'name',
                 'type',
                 'level',
                 'price',
